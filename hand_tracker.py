@@ -23,22 +23,39 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5
 )
 
-# Keyboard settings
-key_width = 80
-key_height = 80
-key_gap = 10
-start_x = 50
-start_y = 400  # Near bottom of screen
+# NEW Keyboard settings - smaller keys
+key_width = 60        # Smaller!
+key_height = 60       # Smaller!
+key_gap = 5          # Smaller gap
+start_y = 250        # Move up to fit more rows
 
-# Create keys for top row
+# Define full keyboard layout
+keyboard_layout = [
+    "QWERTYUIOP",
+    "ASDFGHJKL", 
+    "ZXCVBNM"
+]
+
+# Create all keys
 keys = []
-qwerty_row = "QWERTYUIOP"
 
-for i, char in enumerate(qwerty_row):
-    x = start_x + i * (key_width + key_gap)
-    y = start_y
-    key = Key(x, y, key_width, key_height, char)
-    keys.append(key)
+for row_index, row in enumerate(keyboard_layout):
+    # Calculate starting X to center each row
+    row_width = len(row) * key_width + (len(row) - 1) * key_gap
+    start_x = (640 - row_width) // 2  # Center the row
+    
+    for i, char in enumerate(row):
+        x = start_x + i * (key_width + key_gap)
+        y = start_y + row_index * (key_height + key_gap)
+        key = Key(x, y, key_width, key_height, char)
+        keys.append(key)
+
+# Add space bar (wider than normal keys)
+space_width = 300
+space_x = (640 - space_width) // 2
+space_y = start_y + 3 * (key_height + key_gap)
+space_key = Key(space_x, space_y, space_width, key_height, "SPACE")
+keys.append(space_key)
 
 def draw_keyboard(frame, keys):
     for key in keys:
